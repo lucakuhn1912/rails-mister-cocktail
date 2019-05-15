@@ -1,20 +1,46 @@
-<div class="banner" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url(https://images.unsplash.com/photo-1546171753-97d7676e4602?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80);">
-  <div class="container">
-    <h1><%= @cocktail.name %></h1>
-    <p>
-      <% @cocktail.doses.each do |dose| %>
-      <ul>
-        <li><%= dose.ingredient.name %>
-          <%= link_to dose_path(dose) , method: :delete,
-          data: { confirm: "Are you sure?" } do %>
-          <i class="fas fa-trash-alt"></i>
-          <% end %>
-
-</li>
-      </ul>
-      <% end %>
-    </p>
-    <%= link_to 'Add', new_cocktail_dose_path(@cocktail), class:'btn btn-primary' %>
-    <%= link_to 'Back', cocktails_path, class:'btn btn-primary' %>
+<% if @cocktail.photo.url %>
+  <div class="banner" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('<%= cl_image_path @cocktail.photo, height: 300, width: 400, crop: :fill %>');">
   </div>
+  <% else %>
+  <div class="banner" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1551782450-3939704166fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80');">
+  </div>
+<% end %>
+<div class="container">
+  <h1><%= @cocktail.name %></h1>
+  <p>
+    <% @cocktail.doses.each do |dose| %>
+    <ul>
+      <li><%= dose.ingredient.name %> - <%= dose.description %>
+        <%= link_to dose_path(dose) , method: :delete,
+        data: { confirm: "Are you sure?" } do %>
+        <i class="fas fa-trash-alt"></i>
+        <% end %>
+      </li>
+    </ul>
+    <% end %>
+  </p>
+  <%= link_to 'Add Ingredient', new_cocktail_dose_path(@cocktail), class:'btn btn-outline-primary' %>
+  <%= link_to cocktail_path , method: :delete,
+  data: { confirm: "Do you sure you want to delete #{@cocktail.name}?" } do %>
+    <i class="fas fa-trash-alt"></i>
+    <% end %>
 </div>
+
+<div class="container">
+  <h2>Reviews:</h2>
+  <% @reviews.each do |review|%>
+  <p>"<%= review.content %>" --- <%= review.rating %> stars</p>
+  <% end %>
+</div>
+
+<div class="container">
+  <h2>Add a review for <%= @cocktail.name %></h2>
+  <%= simple_form_for [@cocktail, @review] do |f| %>
+    <%= f.input :content, input_html: { class: "form-control" } %>
+    <%= f.input :rating, collection: [0,1,2,3,4,5], input_html: { class: "form-control" } %>
+    <%= f.submit "add a review", class: "btn btn-primary mt-3" %>
+  <% end %>
+<%= link_to 'Back', root_path, class:'btn btn-outline-primary mt-3' %>
+</div>
+
+

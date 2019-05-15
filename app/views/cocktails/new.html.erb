@@ -1,12 +1,13 @@
 <div class="container">
+
   <h1>New Cocktail</h1>
   <%= simple_form_for [@cocktail] do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
     <div class="form-inputs">
-      <%= f.input :name %>
-      <%= f.input :photo %>
+      <%= f.input :name,  label: false, placeholder: "Sexy Name"%>
+      <%= f.input :photo, label: false%>
       <%= f.input :photo_cache, as: :hidden %>
     </div>
 
@@ -14,4 +15,5 @@
       <%= f.button :submit, class:'btn btn-primary' %>
     </div>
   <% end %>
+
 </div>

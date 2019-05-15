@@ -1,11 +1,18 @@
 class CocktailsController < ApplicationController
-  before_action :set_cocktail, only: [:show]
+  before_action :set_cocktail, only: [:show, :destroy]
 
   def index
     @cocktails = Cocktail.all
+    if params[:search]
+      @cocktails = Cocktail.search(params[:search]).order("created_at DESC")
+    else
+      @cocktails = Cocktail.all.order("created_at DESC")
+    end
   end
 
   def show
+    @review = Review.new
+    @reviews = Review.where(cocktail:@cocktail)
   end
 
   def new
@@ -19,6 +26,11 @@ class CocktailsController < ApplicationController
     else
       render :new
     end
+  end
+
+  def destroy
+    @cocktail.destroy
+    redirect_to root_path
   end
 
   private
